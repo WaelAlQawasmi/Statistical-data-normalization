@@ -18,7 +18,7 @@ public class ScoringSummaryImp implements ScoringSummary{
     public BigDecimal mean() {
         data.stream().mapToDouble(value -> value).sum();
         DecimalFormat decimalFormat = new DecimalFormat("#00.00");
-mean=Math.round(data.stream().mapToDouble(value -> value).average().getAsDouble());
+        mean=Math.round(data.stream().mapToDouble(value -> value).average().getAsDouble());
         BigDecimal vo=new BigDecimal(decimalFormat.format(mean));
 
 
@@ -30,12 +30,12 @@ mean=Math.round(data.stream().mapToDouble(value -> value).average().getAsDouble(
         DecimalFormat decimalFormat = new DecimalFormat("#00.00");
         double bu=data.size();
 
-      double total=Math.sqrt(  RecursionStandardDeviation(data.size())/bu);
+        double total=Math.sqrt(  RecursionStandardDeviation(data.size())/bu);
 
         if(total==16.723635968293497){total=total+.01;}
         BigDecimal vo=new BigDecimal(decimalFormat.format(total));
 
-      return   vo;
+        return   vo;
 
     }
 
@@ -44,11 +44,11 @@ mean=Math.round(data.stream().mapToDouble(value -> value).average().getAsDouble(
         if(n==0){
 
 
-          return 0;
+            return 0;
 
         }
 
-       return Math.pow(data.get(n-1)-mean, 2)+RecursionStandardDeviation(--n);
+        return Math.pow(data.get(n-1)-mean, 2)+RecursionStandardDeviation(--n);
 
     }
 
@@ -77,7 +77,7 @@ mean=Math.round(data.stream().mapToDouble(value -> value).average().getAsDouble(
     public BigDecimal min() {
 
         DecimalFormat decimalFormat = new DecimalFormat("#00.00");
-             BigDecimal vo=new BigDecimal(decimalFormat.format(data.stream().mapToInt(value -> value).min().getAsInt()));
+        BigDecimal vo=new BigDecimal(decimalFormat.format(data.stream().mapToInt(value -> value).min().getAsInt()));
         return   vo;
     }
 
@@ -92,12 +92,22 @@ mean=Math.round(data.stream().mapToDouble(value -> value).average().getAsDouble(
     public String scaling(double value) {
 
 
- double vo= value-mean;
+        double vo= value-mean;
 
-      double  a=vo/standardDeviation().doubleValue();
+        double  a=vo/standardDeviation().doubleValue();
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-                 return decimalFormat.format( (double) Math.round(a * 100) / 100);
+        return decimalFormat.format( (double) Math.round(a * 100) / 100);
 
+
+
+    }
+
+    public String minMaxScaling(double value){
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        double numerator= value-min().doubleValue();
+        double denominator=max().doubleValue()-min().doubleValue();
+        double total= numerator/denominator;
+        return decimalFormat.format( (double) Math.round(total * 100) / 100);
 
     }
 

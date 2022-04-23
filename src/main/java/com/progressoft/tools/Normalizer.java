@@ -27,5 +27,5 @@ public interface Normalizer {
      * @param colToNormalize the name of the column to normalize
      * @return
      */
-    ScoringSummary minMaxScaling(Path csvPath, Path destPath, String colToNormalize);
+    ScoringSummary minMaxScaling(Path csvPath, Path destPath, String colToNormalize) throws IOException;
 }
