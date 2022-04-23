@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
-import java.math.*;
 
 public class ScoringSummaryImp implements ScoringSummary{
     private List<Integer> data;
@@ -89,12 +88,12 @@ public class ScoringSummaryImp implements ScoringSummary{
         return vo;
     }
 
-    public String scaling(double value) {
+    public String Zscore(double value) {
 
+//z = (x – μ) / σ ;  x: the value,z=Zscore,μ:mean , σ:standardDeviation
+        double numerator= value-mean;
 
-        double vo= value-mean;
-
-        double  a=vo/standardDeviation().doubleValue();
+        double  a=numerator/standardDeviation().doubleValue();
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
         return decimalFormat.format( (double) Math.round(a * 100) / 100);
 
@@ -103,6 +102,7 @@ public class ScoringSummaryImp implements ScoringSummary{
     }
 
     public String minMaxScaling(double value){
+        //xnew = (xi – xmin) / (xmax – xmin) , xnew : the normalized data , xi :the value, xmin= minimum value in dataset , xmax= maximum value in dataset
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
         double numerator= value-min().doubleValue();
         double denominator=max().doubleValue()-min().doubleValue();

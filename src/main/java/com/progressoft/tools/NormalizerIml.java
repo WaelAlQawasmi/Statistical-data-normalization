@@ -59,7 +59,7 @@ public class NormalizerIml implements Normalizer {
             String[] lineToArray = line1.split(",");
             List<String> lineAsList = new ArrayList<String>();
             Collections.addAll(lineAsList, lineToArray);
-            lineAsList.add(indexOfColum + 1, String.valueOf(newOne.scaling(data.get(inxexOfcolume++))));
+            lineAsList.add(indexOfColum + 1, String.valueOf(newOne.Zscore(data.get(inxexOfcolume++))));
             myWriter.write(stringToarray.join(",", lineAsList) + "\n");
 
 
