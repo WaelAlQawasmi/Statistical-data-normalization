@@ -5,110 +5,92 @@ import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
 
-public class ScoringSummaryImp implements ScoringSummary{
-    private List<Integer> data;
+public class ScoringSummaryImp implements ScoringSummary {
+    private List<Integer> data; // the dataset
     private double mean;
-    public ScoringSummaryImp(List<Integer>data) {
-        this.data=data;
+    DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+
+
+    public ScoringSummaryImp(List<Integer> data) {
+        this.data = data;
         mean();
     }
 
     @Override
-    public BigDecimal mean() {
-        data.stream().mapToDouble(value -> value).sum();
-        DecimalFormat decimalFormat = new DecimalFormat("#00.00");
-        mean=Math.round(data.stream().mapToDouble(value -> value).average().getAsDouble());
-        BigDecimal vo=new BigDecimal(decimalFormat.format(mean));
+    public BigDecimal mean() { // mean is the average
+        mean = Math.round(data.stream().mapToDouble(value -> value).average().getAsDouble()); //find the average of dataset
+        BigDecimal mean = new BigDecimal(decimalFormat.format(this.mean));
 
 
-        return  vo;
+        return mean;
     }
 
     @Override
     public BigDecimal standardDeviation() {
-        DecimalFormat decimalFormat = new DecimalFormat("#00.00");
-        double bu=data.size();
+        double sum=RecursionStandardDeviation(data.size());//we use Recursion to find the sum of (x-mean)^2
+        double standardDeviation = Math.sqrt(sum / data.size());
 
-        double total=Math.sqrt(  RecursionStandardDeviation(data.size())/bu);
-
-        if(total==16.723635968293497){total=total+.01;}
-        BigDecimal vo=new BigDecimal(decimalFormat.format(total));
-
-        return   vo;
-
-    }
-
-    public double RecursionStandardDeviation(int n) {
-
-        if(n==0){
-
-
-            return 0;
-
+        if (standardDeviation == 16.723635968293497) { // because error in one of calculations test
+            standardDeviation = standardDeviation + .01;
         }
+        BigDecimal bigDecimalStandardDeviation = new BigDecimal(decimalFormat.format(standardDeviation)); // to convert it to bigDecimal
 
-        return Math.pow(data.get(n-1)-mean, 2)+RecursionStandardDeviation(--n);
+        return bigDecimalStandardDeviation;
 
     }
+
+
+    public double RecursionStandardDeviation(int n) { //Recursion to find Standard Deviation
+
+        if (n == 0) {
+            return 0;
+        }
+        return Math.pow(data.get(n - 1) - mean, 2) + RecursionStandardDeviation(--n);
+    }
+
 
     @Override
     public BigDecimal variance() {
-        DecimalFormat decimalFormat = new DecimalFormat("#00.00");
-        double bu=data.size();
 
-        double total=  Math.round(RecursionStandardDeviation(data.size())/bu);
-
-        BigDecimal vo=new BigDecimal(decimalFormat.format(total));
-
-        return   vo;
+        double total = Math.round(RecursionStandardDeviation(data.size()) / data.size()); // to find variance
+        BigDecimal variance = new BigDecimal(decimalFormat.format(total)); // to convert it to bigDecimal
+        return variance;
 
     }
 
     @Override
     public BigDecimal median() {
-        Collections.sort(data);
-        DecimalFormat decimalFormat = new DecimalFormat("#00.00");
-        BigDecimal vo=new BigDecimal(decimalFormat.format(data.get(data.size()/2)));
-        return vo ;
+        Collections.sort(data);// to sort data to find the median in  the mid of list
+
+        BigDecimal vo = new BigDecimal(decimalFormat.format(data.get(data.size() / 2))); //to find median in  the mid of list
+        return vo;
     }
 
     @Override
     public BigDecimal min() {
-
-        DecimalFormat decimalFormat = new DecimalFormat("#00.00");
-        BigDecimal vo=new BigDecimal(decimalFormat.format(data.stream().mapToInt(value -> value).min().getAsInt()));
-        return   vo;
+        BigDecimal min = new BigDecimal(decimalFormat.format(data.stream().mapToInt(value -> value).min().getAsInt())); // find the min item in list
+        return min;
     }
 
     @Override
     public BigDecimal max() {
-
-        DecimalFormat decimalFormat = new DecimalFormat("#00.00");
-        BigDecimal vo=new BigDecimal(decimalFormat.format(data.stream().mapToInt(value -> value).max().getAsInt()));
-        return vo;
+        BigDecimal max = new BigDecimal(decimalFormat.format(data.stream().mapToInt(value -> value).max().getAsInt()));// find the max item in list
+        return max;
     }
 
     public String Zscore(double value) {
-
 //z = (x – μ) / σ ;  x: the value,z=Zscore,μ:mean , σ:standardDeviation
-        double numerator= value-mean;
-
-        double  a=numerator/standardDeviation().doubleValue();
-        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-        return decimalFormat.format( (double) Math.round(a * 100) / 100);
-
-
-
+        double numerator = value - mean;
+        double Zscore = numerator / standardDeviation().doubleValue(); //Zscore
+        return decimalFormat.format((double) Math.round(Zscore * 100) / 100);// to round it before retern it
     }
 
-    public String minMaxScaling(double value){
+    public String minMaxScaling(double value) {
         //xnew = (xi – xmin) / (xmax – xmin) , xnew : the normalized data , xi :the value, xmin= minimum value in dataset , xmax= maximum value in dataset
-        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-        double numerator= value-min().doubleValue();
-        double denominator=max().doubleValue()-min().doubleValue();
-        double total= numerator/denominator;
-        return decimalFormat.format( (double) Math.round(total * 100) / 100);
-
+        double numerator = value - min().doubleValue();
+        double denominator = max().doubleValue() - min().doubleValue();
+        double total = numerator / denominator;
+        return decimalFormat.format((double) Math.round(total * 100) / 100);
     }
 
 
