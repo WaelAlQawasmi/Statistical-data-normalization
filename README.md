@@ -39,7 +39,7 @@ mvn clean install
 ``` 
 * Make sure to send your assignment without output artifacts, this could be accomplished by executing mvn clean before zipping and submitting the assignment
 ```shell script
-mvn clean
+
 ```
 * You should edit [NOTES.MD](NOTES.MD) file answering the questions in it.
 * Your feedback is welcomed, even if you are not able to deliver this assignment. 
